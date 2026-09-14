@@ -46,7 +46,13 @@ export async function collanaDocsBinaryRequest(
 			fileName: parseContentDisposition(firstHeader(headers['content-disposition'])),
 		};
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), readableError(error) as JsonObject);
+		const message = apiErrorMessage(error);
+
+		throw new NodeApiError(
+			this.getNode(),
+			error as JsonObject,
+			message === undefined ? undefined : { message, description: undefined },
+		);
 	}
 }
 
@@ -71,25 +77,47 @@ function parseContentDisposition(header: string | undefined): string | undefined
 }
 
 /**
- * Error bodies arrive as buffers because the request asks for arraybuffer
- * encoding, so decode them before they reach the user.
+ * The service explains rejections in the response body, but that body arrives
+ * as a buffer because the request asks for arraybuffer encoding — without
+ * decoding it the user only ever sees n8n's generic status-code message.
  */
-function readableError(error: unknown): unknown {
-	const candidate = error as { response?: { body?: unknown }; error?: unknown };
-	const body = candidate?.response?.body ?? candidate?.error;
+function apiErrorMessage(error: unknown): string | undefined {
+	const candidate = error as {
+		response?: { data?: unknown; body?: unknown };
+		cause?: { response?: { data?: unknown; body?: unknown } };
+		error?: unknown;
+	};
 
-	if (!Buffer.isBuffer(body)) return error;
+	const body =
+		candidate?.response?.data ??
+		candidate?.response?.body ??
+		candidate?.cause?.response?.data ??
+		candidate?.cause?.response?.body ??
+		candidate?.error;
 
-	const text = body.toString('utf8');
-	let decoded: unknown = text;
+	const text = toText(body);
+	if (text === undefined) return undefined;
+
+	let parsed: unknown = text;
 	try {
-		decoded = JSON.parse(text);
+		parsed = JSON.parse(text);
 	} catch {
 		// Not JSON — the plain text is the best we have.
 	}
 
-	if (candidate.response) candidate.response.body = decoded;
-	candidate.error = decoded;
+	if (typeof parsed === 'string') return parsed.trim() || undefined;
 
-	return error;
+	const asObject = parsed as { message?: unknown; title?: unknown; detail?: unknown };
+	for (const field of [asObject?.detail, asObject?.message, asObject?.title]) {
+		if (typeof field === 'string' && field.trim() !== '') return field;
+	}
+
+	return undefined;
+}
+
+function toText(body: unknown): string | undefined {
+	if (Buffer.isBuffer(body)) return body.toString('utf8');
+	if (body instanceof ArrayBuffer) return Buffer.from(body).toString('utf8');
+	if (typeof body === 'string') return body;
+	return undefined;
 }

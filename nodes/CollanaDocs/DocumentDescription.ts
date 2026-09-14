@@ -62,9 +62,10 @@ export const documentFields: INodeProperties[] = [
 		typeOptions: { rows: 6 },
 		default: '',
 		required: true,
-		placeholder: '{ "invoiceNumber": "R-2026-001", ... }',
+		placeholder: '{ "schema_version": 1, "document": { "number": "AN-2026-0042" }, ... }',
+		hint: 'JSON needs schema_version 1 and a document object; numbers are sent as strings',
 		description:
-			'The document payload as JSON or Business Central XML. Available in the templates as d.*.',
+			'The document payload as JSON or Business Central XML, reachable in the templates as d.*. JSON is validated against the service schema: it requires schema_version 1 and a document object at the root, and every numeric value (position, tax_rate, amounts) must be a string.',
 	},
 	{
 		displayName: 'Body Template',
@@ -108,8 +109,11 @@ export const documentFields: INodeProperties[] = [
 		type: 'string',
 		typeOptions: { multipleValues: true, multipleValueButtonText: 'Add Localization' },
 		default: [],
+		required: true,
 		displayOptions: pdfOnly,
-		description: 'Localization documents (JSON) made available in the templates as t.*',
+		hint: 'At least one entry is required for PDF output',
+		description:
+			'Localization documents (JSON) reachable in the templates as t.*. The service rejects PDF requests that carry none.',
 	},
 	{
 		displayName: 'Margins',

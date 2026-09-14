@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { margin: 0; }
+        .footer { position: relative; }
+    </style>
+</head>
+<body>
+
+<div class="page-footer">
+    <!-- Im Original steckt hier die base64-kodierte Fusszeilen-Grafik. -->
+    <img class="footer-decoration"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+        alt=""
+        style="position:absolute; bottom:-20px; left:0; width:100%; height:auto; z-index:-1;">
+
+    <div class="footer-inner">
+
+        <div class="page-info">
+            {{ t.footer.page }} <span class="pageNumber"></span> {{ t.footer.of }} <span class="totalPages"></span>
+        </div>
+
+        <table class="footer-content">
+        <tr>
+            <td class="left">
+                <div>Muster Gerüstbau GmbH</div>
+                <div>Industriestr. 1, 12345 Musterstadt</div>
+                <div>{{ t.common.phone }}: 01234 5678-0</div>
+                <div>info@muster-geruestbau.example</div>
+                <div>www.muster-geruestbau.example</div>
+            </td>
+            <td class="center">
+                <br>
+                <div>Musterbank Musterstadt</div>
+                <div>{{ t.footer.iban }}: DE00 1234 5678 9012 3456 78</div>
+                <div>{{ t.footer.swift }}: MUSTDEXXXXX</div>
+            </td>
+            <td class="right">
+                <div>{{ t.footer.tax_id }}: DE000000000</div>
+                <div>{{ t.footer.commercial_register }}: HRB 00000</div>
+                <div>{{ t.footer.register_court }}: Amtsgericht Musterstadt</div>
+                <div>{{ t.footer.managing_directors }}: Erika Mustermann, Max Mustermann</div>
+            </td>
+        </tr>
+        </table>
+
+    </div>
+</div>
+
+</body>
+</html>
