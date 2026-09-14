@@ -1,17 +1,17 @@
-# n8n-nodes-collanadocs
+# @develappers/n8n-nodes-collanadocs
 
 An [n8n](https://n8n.io) community node for the Collana Docs service — HTML → PDF (Gotenberg),
 ZUGFeRD 2.3 (PDF/A-3 + XML) and XRechnung 3.x.
 
 ## Installation
 
-In n8n: **Settings → Community Nodes → Install**, then enter `n8n-nodes-collanadocs`.
+In n8n: **Settings → Community Nodes → Install**, then enter `@develappers/n8n-nodes-collanadocs`.
 
 For a self-hosted instance you can also install it manually:
 
 ```bash
 cd ~/.n8n/nodes
-npm install n8n-nodes-collanadocs
+npm install @develappers/n8n-nodes-collanadocs
 ```
 
 ## Credentials
