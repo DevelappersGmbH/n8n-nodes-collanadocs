@@ -80,13 +80,9 @@ export class CollanaDocsApi implements ICredentialType {
 	 * into errors, never the other way round — so the test has to render the
 	 * blank page above rather than provoke a validation error. Templates that
 	 * read no data keep the render from failing on a field the payload omits.
-	 * The service
-	 * answers 200 with a PDF, a wrong secret gives 401, and a host that is not
-	 * Collana Docs gives 404 or 405.
 	 *
-	 * Inside the node this is superseded by its own `credentialTest` (see
-	 * `testedBy`), which tells those cases apart with clearer messages. This
-	 * property is what tests the credential on its own.
+	 * Verified against the service: a valid secret answers 200 with a one-page
+	 * PDF, a wrong secret gives 401, and a wrong path gives 404.
 	 */
 	test: ICredentialTestRequest = {
 		request: {
