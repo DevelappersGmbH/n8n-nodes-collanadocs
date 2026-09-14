@@ -14,19 +14,33 @@ body {
     }
 }
 
-.left { text-align: left; }
-.right { text-align: right; }
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
 
 /* HEADER */
-.page-header { position: relative; width: 100%; }
+
+.page-header {
+    position: relative;
+    width: 100%;
+}
+
 
 /* TOP GRID */
+
 .top-grid {
     display: grid;
     grid-template-columns: 65% 35%;
     align-items: start;
     margin-top: 14px;
 }
+
+/* LEFT COLUMN of TOP GRID */
 
 .left-column {
     min-width: 0;
@@ -43,8 +57,16 @@ body {
     text-decoration-line: underline;
 }
 
-.left-column .recipient { line-height: 1.3; margin-top: 0; }
-.left-column .recipient + .address-headline { margin-top: 10px; }
+.left-column .recipient {
+    line-height: 1.3;
+    margin-top: 0;
+}
+
+/* The secondary address block (sales/invoice address shown below the primary one when they
+differ) directly follows the primary .recipient block, so this only ever matches that case. */
+.left-column .recipient + .address-headline {
+    margin-top: 10px;
+}
 
 .left-column .references {
     margin-top: auto;
@@ -53,10 +75,21 @@ body {
     font-weight: bold;
 }
 
-.left-column .references div { margin-bottom: 2mm; }
+.left-column .references div {
+    margin-bottom: 2mm;
+}
 
-.right-column { grid-column: 2 / 4; grid-row: 1; min-width: 0; }
-.right-column .spacer { height: 12px; }
+/* RIGHT COLUMN of TOP GRID */
+
+.right-column {
+    grid-column: 2 / 4;
+    grid-row: 1;
+    min-width: 0;
+}
+
+.right-column .spacer {
+    height: 12px;
+}
 
 .right-column .document-title {
     text-align: left;
@@ -66,7 +99,9 @@ body {
     margin-bottom: 9px;
 }
 
-.right-column .document-details { line-height: 1.3; }
+.right-column .document-details {
+    line-height: 1.3;
+}
 
 .detail-row {
     min-width: 0;
@@ -76,21 +111,44 @@ body {
     align-items: start;
 }
 
-.detail-row .label { white-space: nowrap; text-align: left; }
-.detail-row .value { min-width: 0; white-space: normal; text-align: right; justify-self: end; }
+.detail-row .label {
+    white-space: nowrap;
+    text-align: left;
+}
+
+.detail-row .value {
+    min-width: 0;
+    white-space: normal;
+    text-align: right;
+    justify-self: end;
+}
 
 .served-line,
 .delivery-headline,
-.address-headline { font-weight: bold; text-align: left; }
+.address-headline {
+    font-weight: bold;
+    text-align: left;
+}
 
 .sales-contact,
-.delivery-address { text-align: left; }
+.delivery-address {
+    text-align: left;
+}
+
 
 /* INTRO & OUTRO */
-.intro { margin-top: 30px; }
-.outro { margin-top: 20px; }
+
+.intro {
+    margin-top: 30px;
+}
+
+.outro {
+    margin-top: 20px;
+}
+
 
 /* TABLE */
+
 .line-items {
     width: 100%;
     border-collapse: collapse;
@@ -98,24 +156,65 @@ body {
     margin-top: 20px;
 }
 
-.col-position { width: 7%; }
-.col-quantity { width: 10%; }
-.col-unit { width: 8%; }
-.col-description { width: auto; }
-.col-price { width: 15%; }
-.col-total { width: 15%; }
+.col-position {
+    width: 7%;
+}
 
-.line-items thead { display: table-header-group; }
-.line-items th { border-bottom: 1px solid black; padding: 6px; }
+.col-quantity {
+    width: 10%;
+}
+
+.col-unit {
+    width: 8%;
+}
+
+.col-description {
+    width: auto;
+}
+
+.col-price {
+    width: 15%;
+}
+
+.col-total {
+    width: 15%;
+}
+
+.line-items thead {
+    display: table-header-group;
+}
+
+.line-items th {
+    border-bottom: 1px solid black;
+    padding: 6px;
+}
 
 .line-item,
-.text-item { break-inside: avoid; page-break-inside: avoid; }
+.text-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
 
-.line-items td { padding: 6px; vertical-align: top; }
-.line-items td.numeric { text-align: right; white-space: nowrap; }
+.line-items td {
+    padding: 6px;
+    vertical-align: top;
+}
 
-.line-item { font-weight: bold; }
-.line-item .description { display: block; font-weight: bold; margin-bottom: 2px; }
+.line-items td.numeric {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.line-item {
+    font-weight: bold;
+}
+
+.line-item .description {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
 .line-item .details {
     display: block;
     font-weight: normal;
@@ -124,7 +223,12 @@ body {
     line-height: 1.3;
 }
 
-.text-item .description { display: block; font-weight: bold; margin-bottom: 2px; }
+.text-item .description {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
 .text-item .details {
     display: block;
     font-weight: normal;
@@ -133,7 +237,9 @@ body {
     line-height: 1.3;
 }
 
+
 /* TOTALS */
+
 .totals {
     width: 45%;
     margin-left: auto;
@@ -141,34 +247,92 @@ body {
     table-layout: fixed;
 }
 
-.totals td { padding: 4px 6px; }
-.totals .label { width: 50%; text-align: left; }
-.totals .currency { width: auto; text-align: center; }
-.totals .amount { width: 30%; text-align: right; white-space: nowrap; }
-.totals tbody tr:first-child td { border-top: 1px solid black; }
-.totals .grand-total td { border-top: 1px solid black; font-weight: bold; }
-.totals tbody tr:last-child td { border-bottom: 1px solid black; }
+.totals td {
+    padding: 4px 6px;
+}
+
+.totals .label {
+    width: 50%;
+    text-align: left;
+}
+
+.totals .currency {
+    width: auto;
+    text-align: center;
+}
+
+.totals .amount {
+    width: 30%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.totals tbody tr:first-child td {
+    border-top: 1px solid black;
+}
+
+.totals .grand-total td {
+    border-top: 1px solid black;
+    font-weight: bold;
+}
+
+.totals tbody tr:last-child td {
+    border-bottom: 1px solid black;
+}
+
 
 /* TERMS */
-.terms { margin-top: 20px; }
-.terms-row { display: flex; }
-.terms-label { width: 140px; }
-.terms-value { flex: 1; font-weight: bold; }
+
+.terms {
+    margin-top: 20px;
+}
+
+.terms-row {
+    display: flex;
+}
+
+.terms-label {
+    width: 140px;
+}
+
+.terms-value {
+    flex: 1;
+    font-weight: bold;
+}
+
 
 /* FOOTER */
-.page-info { margin-bottom: 10px; text-align: right; font-size: 7pt; }
-.page-footer { position: relative; }
-.footer-inner { padding: 0 75px; }
+
+.page-info {
+    margin-bottom: 10px;
+    text-align: right;
+    font-size: 7pt;
+}
+
+.page-footer {
+    position: relative;
+}
+
+.footer-inner {
+    padding: 0 75px;
+}
 
 .footer-content {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
-    border-top: 1px solid #f4b000;
+    border-top: 1px solid #1ba833;
     line-height: 1.35;
     font-size: 7pt;
     font-weight: 500;
 }
 
-.footer-content td { width: 33.333%; vertical-align: top; padding: 11px 0 7px 0; }
-.footer-content td.center { text-align: center; }
+.footer-content td {
+    width: 33.333%;
+    vertical-align: top;
+    padding: 11px 0 7px 0;
+}
+
+.footer-content td.center {
+    text-align: center;
+}

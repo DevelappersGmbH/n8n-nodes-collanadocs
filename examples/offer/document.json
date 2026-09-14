@@ -7,35 +7,35 @@
   },
   "sender": {
     "company": {
-      "name": "Muster Gerüstbau GmbH"
+      "name": "Spreebogen Gerüstbau GmbH"
     },
     "address": {
       "name": {
-        "line1": "Muster Gerüstbau GmbH",
+        "line1": "Spreebogen Gerüstbau GmbH",
         "line2": ""
       },
       "street": {
-        "line1": "Industriestr. 1",
+        "line1": "Am Nordhafen 7",
         "line2": ""
       },
-      "city": "12345 Musterstadt"
+      "city": "13353 Berlin"
     }
   },
   "customer": {
     "id": "K-10045",
     "company": {
-      "name": "Musterfirma GmbH"
+      "name": "Hausverwaltung Prenzlauer Bogen GmbH"
     },
     "address": {
       "name": {
-        "line1": "Musterfirma GmbH",
+        "line1": "Hausverwaltung Prenzlauer Bogen GmbH",
         "line2": "z. Hd. Frau Schneider"
       },
       "street": {
-        "line1": "Musterweg 2",
+        "line1": "Greifswalder Str. 88",
         "line2": ""
       },
-      "city": "10115 Berlin"
+      "city": "10409 Berlin"
     }
   },
   "recipient": {
@@ -58,33 +58,33 @@
     "requested_date": "05.10.2026",
     "address": {
       "name": {
-        "line1": "Wohnanlage Nord",
+        "line1": "Wohnanlage Nordkiez",
         "line2": "Bauleitung, Bauteil C"
       },
       "street": {
-        "line1": "Nordring 14",
+        "line1": "Seestr. 92",
         "line2": ""
       },
-      "city": "10557 Berlin"
+      "city": "13353 Berlin"
     }
   },
   "sales": {
     "internal_contact": {
       "name": "Laura Berger",
-      "phone": "01234 5678-17",
-      "email": "l.berger@muster-geruestbau.example"
+      "phone": "030 23125 217",
+      "email": "l.berger@spreebogen-geruestbau.example"
     }
   },
   "references": {
     "free_text": [
       "Ihre Anfrage vom 02.09.2026",
-      "Projekt: Fassadensanierung Wohnanlage Nord"
+      "Projekt: Fassadensanierung Wohnanlage Nordkiez"
     ]
   },
   "content": [
     {
       "key": "intro",
-      "text": "<p>Sehr geehrte Damen und Herren,<br>vielen Dank für Ihre Anfrage. Für die Einrüstung der Wohnanlage Nord unterbreiten wir Ihnen das folgende Angebot.</p>"
+      "text": "<p>Sehr geehrte Damen und Herren,<br>vielen Dank für Ihre Anfrage. Für die Einrüstung der Wohnanlage Nordkiez unterbreiten wir Ihnen das folgende Angebot.</p>"
     },
     {
       "key": "outro",

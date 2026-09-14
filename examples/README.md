@@ -3,7 +3,15 @@
 ## `offer/` — a scaffolding offer rendered to PDF
 
 A complete, working request for `POST /v1/generate/offer`, verified against a live instance.
-Company details, bank account and register entries are placeholders.
+
+Spreebogen Gerüstbau GmbH is invented. Its identifiers are deliberately taken from ranges that
+cannot collide with a real company, yet still pass a format or checksum check, so the sample looks
+right in a rendered document without pointing at anybody:
+
+- the IBAN carries a valid ISO 13616 checksum over bank code `99999999`, which is not assigned,
+- the phone number sits in `030 23125 xxx`, the block the Bundesnetzagentur reserves for fiction,
+- `.example` is reserved for documentation by RFC 2606,
+- the VAT ID passes the German Modulo 11,10 check.
 
 The sample deliberately exercises the trickier parts of the template:
 
@@ -25,8 +33,9 @@ The sample deliberately exercises the trickier parts of the template:
 To try it: import `workflow.json` in n8n (**Workflows → Import from File**), attach a
 Collana Docs API credential to the node, and run it.
 
-The header and footer carry a 1×1 transparent PNG where the real letterhead graphic belongs —
-images are embedded as `data:` URIs, since the renderer does not fetch external URLs.
+Header and footer share one decorative graphic, rotated 180° for the header. It is embedded as a
+`data:` URI, because the renderer does not fetch external URLs — every image has to travel inside
+the template, which is why the two files are around 25 KB each.
 
 ### Document data contract
 
