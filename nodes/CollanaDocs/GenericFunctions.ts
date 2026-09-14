@@ -1,5 +1,5 @@
 import type { IExecuteFunctions, IHttpRequestMethods, JsonObject } from 'n8n-workflow';
-import { NodeApiError } from 'n8n-workflow';
+import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 import { randomBytes } from 'crypto';
 
 export const CREDENTIALS_NAME = 'collanaDocsApi';
@@ -59,7 +59,18 @@ export async function collanaDocsBinaryRequest(
 	fields: IMultipartField[],
 ): Promise<IBinaryResponse> {
 	const credentials = await this.getCredentials(CREDENTIALS_NAME);
-	const baseUrl = (credentials.baseUrl as string).replace(/\/+$/, '');
+	const baseUrl = String(credentials.baseUrl ?? '').replace(/\/+$/, '');
+
+	// The credential has no default base URL, so an unfilled one would otherwise
+	// turn into a relative request and fail with an unhelpful message.
+	if (baseUrl === '') {
+		throw new NodeOperationError(
+			this.getNode(),
+			'The Collana Docs credential has no Base URL',
+			{ description: 'Set the Base URL of your Collana Docs instance on the credential.' },
+		);
+	}
+
 	const { body, contentType } = buildMultipartBody(fields);
 
 	try {

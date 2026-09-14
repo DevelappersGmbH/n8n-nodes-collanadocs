@@ -11,14 +11,14 @@ export class CollanaDocsApi implements ICredentialType {
 
 	icon = { light: 'file:collanaDocs.svg', dark: 'file:collanaDocs.dark.svg' } as const;
 
-	documentationUrl = 'https://pdfgen.develappers-staging.de/swagger';
+	documentationUrl = 'https://github.com/DevelappersGmbH/n8n-nodes-collanadocs#credentials';
 
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Base URL',
 			name: 'baseUrl',
 			type: 'string',
-			default: 'https://pdfgen.develappers-staging.de',
+			default: '',
 			placeholder: 'https://pdfgen.example.com',
 			required: true,
 			description: 'Root URL of the Collana Docs service, without a trailing slash',

@@ -20,7 +20,7 @@ Create a **Collana Docs API** credential with:
 
 | Field | Description |
 | --- | --- |
-| Base URL | Root URL of your instance, e.g. `https://pdfgen.develappers-staging.de` |
+| Base URL | Root URL of your instance, e.g. `https://pdfgen.example.com`. Deliberately has no default, so nothing is posted to the wrong environment by accident. |
 | Client Secret | Shared secret, sent as the `X-Client-Secret` header |
 
 The secret is the one the service requires for its `/v1/generate` endpoints.
@@ -85,8 +85,8 @@ any other artwork has to travel inside the template.
 
 Validation errors come back verbatim from the service, naming the offending JSON path.
 
-See [examples/offer](examples/offer) for a complete working request, including an importable
-n8n workflow.
+See [examples](examples) for three complete working requests — an offer as PDF, and the matching
+invoice both as PDF with ZUGFeRD and as XRechnung XML — each with an importable n8n workflow.
 
 ## Output
 
@@ -103,21 +103,21 @@ Each item carries the generated document as binary data, plus metadata on `json`
 
 ## Development
 
+The package uses [`@n8n/node-cli`](https://www.npmjs.com/package/@n8n/node-cli), the official
+community-node tooling.
+
 ```bash
 npm install
-npm run build     # compile to dist/ and copy icons
-npm run lint      # eslint incl. the n8n community-node rules
-npm run format    # prettier
+npm run dev       # downloads and starts a local n8n with this node, rebuilding on change
+npm run build     # compile to dist/ and copy the icons and codex file
+npm run lint      # n8n community-node rules, incl. the n8n Cloud compatibility checks
+npm run lint:fix  # the same, with auto-fixes applied
 ```
 
-To try the node in a local n8n:
+`npm run dev` stays in the foreground — that is a watcher, not a hang. Stop it with `Ctrl+C`.
 
-```bash
-npm run build
-npm link
-cd ~/.n8n/nodes && npm link n8n-nodes-collanadocs
-n8n start
-```
+The package ships without runtime dependencies, which n8n Cloud requires; `npm run lint` fails if
+one is added.
 
 ## License
 
