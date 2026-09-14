@@ -6,30 +6,6 @@ const pdfOnly = {
 	},
 };
 
-export const documentOperations: INodeProperties[] = [
-	{
-		displayName: 'Operation',
-		name: 'operation',
-		type: 'options',
-		noDataExpression: true,
-		options: [
-			{
-				name: 'Generate Document',
-				value: 'generate',
-				description: 'Render a document to PDF, PDF with ZUGFeRD, or XRechnung XML',
-				action: 'Generate a document',
-			},
-			{
-				name: 'Generate Offer',
-				value: 'generateOffer',
-				description: 'Render an offer from Business Central XML or JSON document data',
-				action: 'Generate an offer',
-			},
-		],
-		default: 'generate',
-	},
-];
-
 export const documentFields: INodeProperties[] = [
 	{
 		displayName: 'Output Format',

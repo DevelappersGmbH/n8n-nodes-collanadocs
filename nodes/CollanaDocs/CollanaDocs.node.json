@@ -1,5 +1,5 @@
 {
-	"node": "n8n-nodes-base.collanaDocs",
+	"node": "n8n-nodes-collanadocs.collanaDocs",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
 	"categories": ["Utility"],

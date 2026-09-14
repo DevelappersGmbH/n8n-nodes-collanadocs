@@ -7,7 +7,7 @@ import type {
 import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 import FormData from 'form-data';
 
-import { documentFields, documentOperations } from './DocumentDescription';
+import { documentFields } from './DocumentDescription';
 import { collanaDocsBinaryRequest } from './GenericFunctions';
 
 interface IMarginValues {
@@ -23,10 +23,7 @@ interface IGenerateOptions {
 	outputBinaryProperty?: string;
 }
 
-const ENDPOINTS: Record<string, string> = {
-	generate: '/v1/generate',
-	generateOffer: '/v1/generate/offer',
-};
+const ENDPOINT = '/v1/generate';
 
 export class CollanaDocs implements INodeType {
 	description: INodeTypeDescription = {
@@ -35,7 +32,7 @@ export class CollanaDocs implements INodeType {
 		icon: 'file:collanaDocs.svg',
 		group: ['transform'],
 		version: 1,
-		subtitle: '={{ $parameter["operation"] + ": " + $parameter["outputFormat"] }}',
+		subtitle: '={{ $parameter["outputFormat"] }}',
 		description: 'Generate PDF, ZUGFeRD and XRechnung documents with the Collana Docs service',
 		defaults: {
 			name: 'Collana Docs',
@@ -49,7 +46,7 @@ export class CollanaDocs implements INodeType {
 				required: true,
 			},
 		],
-		properties: [...documentOperations, ...documentFields],
+		properties: documentFields,
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -58,14 +55,6 @@ export class CollanaDocs implements INodeType {
 
 		for (let i = 0; i < items.length; i++) {
 			try {
-				const operation = this.getNodeParameter('operation', i) as string;
-				const endpoint = ENDPOINTS[operation];
-				if (endpoint === undefined) {
-					throw new NodeOperationError(this.getNode(), `Unknown operation "${operation}"`, {
-						itemIndex: i,
-					});
-				}
-
 				const outputFormat = this.getNodeParameter('outputFormat', i) as string;
 				const documentData = this.getNodeParameter('documentData', i) as string;
 				const options = this.getNodeParameter('options', i, {}) as IGenerateOptions;
@@ -80,9 +69,27 @@ export class CollanaDocs implements INodeType {
 					appendIfSet(form, 'footerTemplate', this.getNodeParameter('footerTemplate', i, '') as string);
 					appendIfSet(form, 'styleSheet', this.getNodeParameter('styleSheet', i, '') as string);
 
-					const localizationData = this.getNodeParameter('localizationData', i, []) as string[];
+					// The service rejects a PDF request that carries no localization, and
+					// blank entries never reach it, so catch that here rather than
+					// spending a round trip on it.
+					const localizationData = (
+						this.getNodeParameter('localizationData', i, []) as string[]
+					).filter((entry) => entry !== undefined && entry !== '');
+
+					if (localizationData.length === 0) {
+						throw new NodeOperationError(
+							this.getNode(),
+							'Localization Data is required when the output format is a PDF',
+							{
+								itemIndex: i,
+								description:
+									'Add at least one localization document. It is reachable in the templates as t.*.',
+							},
+						);
+					}
+
 					for (const localization of localizationData) {
-						appendIfSet(form, 'localizationData', localization);
+						form.append('localizationData', localization);
 					}
 
 					const margins = this.getNodeParameter('margins.values', i, {}) as IMarginValues;
@@ -103,7 +110,7 @@ export class CollanaDocs implements INodeType {
 					}
 				}
 
-				const response = await collanaDocsBinaryRequest.call(this, 'POST', endpoint, form);
+				const response = await collanaDocsBinaryRequest.call(this, 'POST', ENDPOINT, form);
 
 				const fileName =
 					options.fileName || response.fileName || defaultFileName(outputFormat);

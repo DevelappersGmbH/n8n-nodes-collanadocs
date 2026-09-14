@@ -25,14 +25,13 @@ Create a **Collana Docs API** credential with:
 
 The secret is the one the service requires for its `/v1/generate` endpoints.
 
-## Operations
+## What it does
 
-| Operation | Endpoint |
-| --- | --- |
-| Generate Document | `POST /v1/generate` |
-| Generate Offer | `POST /v1/generate/offer` |
+The node renders one document per input item through `POST /v1/generate`.
 
-Both accept the same parameters.
+The service also exposes `POST /v1/generate/offer`, which the node deliberately does not use: that
+endpoint always renders a PDF and rejects a request without templates, so it silently ignores an
+`XRechnung` output format. `/v1/generate` covers the same ground without that trap.
 
 ### Parameters
 

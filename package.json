@@ -22,9 +22,8 @@
   "engines": {
     "node": ">=20.15"
   },
-  "main": "index.js",
   "scripts": {
-    "build": "npx rimraf dist && tsc && node scripts/copy-icons.js",
+    "build": "npx rimraf dist && tsc && node scripts/copy-assets.js",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
     "lint": "eslint nodes credentials package.json",
@@ -49,7 +48,6 @@
   "devDependencies": {
     "@types/node": "^22.20.2",
     "@typescript-eslint/parser": "^8.32.0",
-    "axios": "^1.20.0",
     "eslint": "^8.57.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.3",
     "n8n-workflow": "^2.16.0",

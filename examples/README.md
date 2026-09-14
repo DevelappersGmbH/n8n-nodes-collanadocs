@@ -2,7 +2,7 @@
 
 ## `offer/` — a scaffolding offer rendered to PDF
 
-A complete, working request for `POST /v1/generate/offer`, verified against a live instance.
+A complete, working request for `POST /v1/generate`, verified against a live instance.
 
 Spreebogen Gerüstbau GmbH is invented. Its identifiers are deliberately taken from ranges that
 cannot collide with a real company, yet still pass a format or checksum check, so the sample looks
