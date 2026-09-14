@@ -1,5 +1,5 @@
 {
-  "name": "n8n-nodes-collanadocs",
+  "name": "@develappers/n8n-nodes-collanadocs",
   "version": "0.1.0",
   "description": "n8n node for the Collana Docs PDF / E-Invoice service (HTML to PDF, ZUGFeRD, XRechnung)",
   "keywords": [
@@ -31,6 +31,9 @@
     "lint:fix": "n8n-node lint --fix",
     "release": "n8n-node release",
     "prepublishOnly": "n8n-node prerelease"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "dist"
