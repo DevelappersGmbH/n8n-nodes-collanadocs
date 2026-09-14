@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "common": {
+    "delivery_address": "Lieferadresse",
+    "sales_address": "Verkaufsadresse",
+    "invoice_address": "Rechnungsadresse",
+    "contact": "Kontakt",
+    "phone": "Tel.",
+    "fax": "Fax",
+    "email": "E-Mail",
+    "website": "Webseite",
+    "table": {
+      "position": "Pos.",
+      "number": "Nr.",
+      "description": "Bezeichnung",
+      "quantity": "Anz.",
+      "unit": "EH",
+      "price": "E-Preis",
+      "tax_rate": "USt.-%",
+      "line_amount": "G-Preis"
+    },
+    "totals": {
+      "net_total": "Total EUR ohne MwSt.",
+      "vat": "MwSt.",
+      "discount": "Rabatt",
+      "grand_total": "Total EUR inkl. MwSt.",
+      "payable_amount": "Zahlbetrag"
+    },
+    "payment_terms": "Zahlungsbedingungen",
+    "prepayment": "Vorauszahlung",
+    "served_by": "Es bedient Sie",
+    "customer_number": "Ihre Kunden-Nr."
+  },
+
+  "invoice": {
+    "title": "Rechnung",
+    "invoice_number": "Rechnungsnr.",
+    "invoice_date": "Rechnungsdatum",
+    "order_number": "Bestellnr.",
+    "delivery_note_number": "Lieferscheinnr.",
+    "payment_due_date": "Zahlbar bis",
+    "delivery_terms": "Lieferbedingung",
+    "note": "Hinweis"
+  },
+
+  "offer": {
+    "title": "Angebot",
+    "date": "Angebotsdatum",
+    "number": "Angebots-Nr.",
+    "delivery_date": "Liefertermin"
+  },
+
+  "quote": {
+    "title": "Auftragsbestätigung",
+    "date": "Auftragsdatum",
+    "number": "Auftrags-Nr.",
+    "offer_reference": "Bezug auf Angebot"
+  },
+
+  "footer": {
+    "managing_directors": "Geschäftsführer",
+    "commercial_register": "Handelsregister",
+    "register_court": "Registergericht",
+    "tax_id": "USt-ID",
+    "swift": "BIC",
+    "iban": "IBAN",
+    "page": "Seite",
+    "of": "von"
+  }
+}

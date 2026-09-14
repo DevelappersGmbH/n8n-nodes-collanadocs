@@ -1,0 +1,58 @@
+{
+  "name": "n8n-nodes-collanadocs",
+  "version": "0.1.0",
+  "description": "n8n node for the Collana Docs PDF / E-Invoice service (HTML to PDF, ZUGFeRD, XRechnung)",
+  "keywords": [
+    "n8n-community-node-package",
+    "pdf",
+    "zugferd",
+    "xrechnung",
+    "e-invoice",
+    "gotenberg"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/DevelappersGmbH/n8n-nodes-collanadocs",
+  "author": {
+    "name": "Develappers GmbH",
+    "email": "info.dev@collana.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DevelappersGmbH/n8n-nodes-collanadocs.git"
+  },
+  "engines": {
+    "node": ">=20.15"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [
+      "dist/credentials/CollanaDocsApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/CollanaDocs/CollanaDocs.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "*",
+    "eslint": "9.39.4",
+    "prettier": "3.8.3",
+    "release-it": "20.2.0",
+    "typescript": "5.9.3"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}

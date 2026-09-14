@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-collanadocs.collanaDocs",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Utility"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/DevelappersGmbH/n8n-nodes-collanadocs"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/DevelappersGmbH/n8n-nodes-collanadocs"
+			}
+		]
+	}
+}

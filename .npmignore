@@ -1,0 +1,11 @@
+.github
+.vscode
+node_modules
+nodes
+credentials
+*.ts
+tsconfig.json
+scripts
+.eslintrc.js
+.eslintrc.prepublish.js
+.prettierrc.js

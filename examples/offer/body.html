@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div class="content">
+{{
+    addressee = d.customer
+    addressee_label = t.common.sales_address
+    if d.recipient && d.recipient.company.name != ""
+        addressee = d.recipient
+        addressee_label = t.common.invoice_address
+    end
+}}
+<div class="top-grid">
+
+    <div class="left-column">
+        <div class="sender-line">
+            {{ d.sender.company.name }}, {{ d.sender.address.street.line1 }}, {{ d.sender.address.city }}
+        </div>
+        <div class="address-headline">{{ addressee_label }}:</div>
+        <div class="recipient">
+            {{ addressee.company.name }}<br>
+            {{ if addressee.address.name && addressee.address.name.line2 != null && addressee.address.name.line2 != "" }}
+                {{ addressee.address.name.line2 }}<br>
+            {{ end }}
+            {{ addressee.address.street.line1 }}<br>
+            {{ if addressee.address.street.line2 != null && addressee.address.street.line2 != "" }}
+                {{ addressee.address.street.line2 }}<br>
+            {{ end }}
+            {{ addressee.address.city }}
+        </div>
+        {{ if d.recipient && d.recipient.company.name != "" && d.recipient.company.name != d.customer.company.name }}
+        <div class="address-headline">{{ t.common.sales_address }}:</div>
+        <div class="recipient">
+            {{ d.customer.company.name }}<br>
+            {{ if d.customer.address.name && d.customer.address.name.line2 != null && d.customer.address.name.line2 != "" }}
+                {{ d.customer.address.name.line2 }}<br>
+            {{ end }}
+            {{ d.customer.address.street.line1 }}<br>
+            {{ if d.customer.address.street.line2 != null && d.customer.address.street.line2 != "" }}
+                {{ d.customer.address.street.line2 }}<br>
+            {{ end }}
+            {{ d.customer.address.city }}
+        </div>
+        {{ end }}
+        <div class="references">
+            {{ for ref in d.references.free_text }}
+            <div>{{ ref }}</div>
+            {{ end }}
+        </div>
+    </div>
+
+    <div class="right-column">
+
+        <div class="document-title">{{ t.offer.title }}</div>
+
+        <div class="document-details">
+            <div class="detail-row">
+                <div class="label">{{ t.offer.date }}:</div>
+                <div class="value">{{ d.document.date }}</div>
+            </div>
+            <div class="detail-row">
+                <div class="label">{{ t.offer.number }}:</div>
+                <div class="value">{{ d.document.number }}</div>
+            </div>
+            <div class="detail-row">
+                <div class="label">{{ t.common.customer_number }}:</div>
+                <div class="value">{{ d.customer.id }}</div>
+            </div>
+            {{ if d.delivery.requested_date != "" }}
+            <div class="detail-row">
+                <div class="label">{{ t.offer.delivery_date }}:</div>
+                <div class="value">{{ d.delivery.requested_date }}</div>
+            </div>
+            {{ end }}
+
+            <div class="spacer"></div>
+
+            <div class="served-line">{{ t.common.served_by }}:</div>
+            <div class="sales-contact">
+                {{ d.sales.internal_contact.name }}<br>
+                {{ d.sales.internal_contact.phone }}<br>
+                {{ d.sales.internal_contact.email }}
+            </div>
+
+            <div class="spacer"></div>
+
+            <div class="delivery-headline">{{ t.common.delivery_address }}:</div>
+            <div class="delivery-address">
+                {{ d.delivery.address.name.line1 }}<br>
+                {{ if d.delivery.address.name.line2 != null && d.delivery.address.name.line2 != "" }}
+                    {{ d.delivery.address.name.line2 }}<br>
+                {{ end }}
+                {{ d.delivery.address.street.line1 }}<br>
+                {{ if d.delivery.address.street.line2 != null && d.delivery.address.street.line2 != "" }}
+                    {{ d.delivery.address.street.line2 }}<br>
+                {{ end }}
+                {{ d.delivery.address.city }}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="intro">
+    {{ for c in d.content }}{{ if c.key == "intro" }}{{ c.text }}{{ end }}{{ end }}
+</div>
+
+<table class="line-items">
+
+    <colgroup>
+        <col class="col-position">
+        <col class="col-quantity">
+        <col class="col-unit">
+        <col class="col-description">
+        <col class="col-price">
+        <col class="col-total">
+    </colgroup>
+
+    <thead>
+    <tr>
+        <th class="left">{{ t.common.table.position }}</th>
+        <th class="right">{{ t.common.table.quantity }}</th>
+        <th class="left">{{ t.common.table.unit }}</th>
+        <th class="left">{{ t.common.table.description }}</th>
+        <th class="right">{{ t.common.table.price }} {{ d.document.currency }}</th>
+        <th class="right">{{ t.common.table.line_amount }} {{ d.document.currency }}</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {{ for item in d.line_items }}
+        {{ if item.line_type == "text" }}
+        <tr class="text-item">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <span class="description">
+                    {{ item.product.description }}
+                </span>
+                <span class="details">
+                    {{ item.product.details }}
+                </span>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+        {{ else }}
+        <tr class="line-item">
+            <td class="numeric">{{ item.position }}</td>
+            <td class="numeric">{{ item.quantity }}</td>
+            <td>{{ item.unit_of_measure }}</td>
+            <td>
+                <span class="description">
+                    {{ item.product.description }}
+                </span>
+                <span class="details">
+                    {{ item.product.details }}
+                </span>
+            </td>
+            <td class="numeric">{{ item.unit_price }}</td>
+            <td class="numeric">{{ item.net_amount }}</td>
+        </tr>
+        {{ end }}
+    {{ end }}
+    </tbody>
+
+</table>
+
+<table class="totals">
+    <tbody>
+        <tr>
+            <td class="label">{{ t.common.totals.net_total }}</td>
+            <td class="currency">{{ d.document.currency }}</td>
+            <td class="amount">{{ d.totals.net }}</td>
+        </tr>
+        {{ for vat in d.totals.vat_rates }}
+            {{ present = false }}
+            {{ for item in d.line_items }}
+                {{ if item.line_type == "article" && item.tax_rate == vat.rate }}
+                    {{ present = true }}
+                {{ end }}
+            {{ end }}
+            {{ if present }}
+            <tr>
+                <td class="label">{{ vat.rate }} % {{ t.common.totals.vat }}</td>
+                <td class="currency">{{ d.document.currency }}</td>
+                <td class="amount">{{ vat.amount }}</td>
+            </tr>
+            {{ end }}
+        {{ end }}
+        <tr class="grand-total">
+            <td class="label">{{ t.common.totals.grand_total }}</td>
+            <td class="currency">{{ d.document.currency }}</td>
+            <td class="amount">{{ d.totals.grand_total }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="terms">
+{{
+    terms_parts = []
+    if d.payment.terms != null && d.payment.terms != ""
+        terms_parts = terms_parts | array.add d.payment.terms
+    end
+    if d.payment.method != null && d.payment.method != ""
+        terms_parts = terms_parts | array.add d.payment.method
+    end
+    if d.payment.prepayment
+        terms_parts = terms_parts | array.add t.common.prepayment
+    end
+}}
+    <div class="terms-row">
+        <span class="terms-label">{{ t.common.payment_terms }}:</span>
+        <span class="terms-value">{{ terms_parts | array.join " · " }}</span>
+    </div>
+</div>
+
+<div class="outro">
+    {{ for c in d.content }}{{ if c.key == "outro" }}{{ c.text }}{{ end }}{{ end }}
+</div>
+</div>
+
+</body>
+</html>
