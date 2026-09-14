@@ -41,18 +41,29 @@ endpoint always renders a PDF and rejects a request without templates, so it sil
 - **Body / Header / Footer Template** — Scriban/HTML fragments. Header and footer are rendered on
   every page.
 - **Style Sheet** — CSS applied to header, body and footer.
-- **Localization Data** — one or more localization JSON documents, reachable as `t.*`. Required
-  for PDF output; the service rejects a PDF request that carries none.
+- **Localization Data** — the localization document as JSON, reachable as `t.*`. Required for PDF
+  output; the service rejects a PDF request that carries none. The node sends exactly one, so pick
+  the language in the workflow and pass that document.
 - **Margins** — `top`, `right`, `bottom`, `left`, each including its unit (`20mm`). Omitted sides
   fall back to the service defaults.
-- **Options → Image Input Binary Field** — name of an input binary field whose image is uploaded
-  with the request, for example a logo referenced from the templates.
 - **Options → Put Output File in Field** — output binary field for the generated document
   (default `data`).
 - **Options → File Name** — overrides the name the service reports.
 
 Templates, style sheet, localization and margins are hidden for `XRechnung`, which produces XML
 without rendering a page.
+
+## Templates and n8n expressions
+
+Scriban and n8n both use `{{ }}`. Paste a template into a field that is switched to **Expression**
+and n8n tries to evaluate the template itself, which fails with `[ERROR: invalid syntax]`.
+
+Keep the four template fields on **Fixed**. Hover the parameter and use the Fixed/Expression
+toggle; on Fixed the text is passed through untouched, braces and all.
+
+Expression mode is still the right choice when the template comes from somewhere else — the field
+then holds a single expression such as `{{ $json.bodyTemplate }}`, and the Scriban braces arrive in
+the data rather than in the field.
 
 ## Document data contract
 
@@ -69,8 +80,8 @@ The service validates **Document Data** against its own JSON schema and is stric
 A template that reads a field the data does not have fails the whole request with a 500 — there
 is no silent fallback to an empty string, so keep templates and data in sync.
 
-Images must be embedded as `data:` URIs; the renderer does not fetch external URLs. Use the
-**Image Input Binary Field** option to pass one image alongside the request instead.
+Images must be embedded as `data:` URIs; the renderer does not fetch external URLs, so a logo or
+any other artwork has to travel inside the template.
 
 Validation errors come back verbatim from the service, naming the offending JSON path.
 

@@ -1,14 +1,17 @@
 import type {
+	ICredentialTestFunctions,
+	ICredentialsDecrypted,
 	IExecuteFunctions,
+	INodeCredentialTestResult,
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
-import FormData from 'form-data';
+import { NodeApiError, NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 import { documentFields } from './DocumentDescription';
 import { collanaDocsBinaryRequest } from './GenericFunctions';
+import type { IMultipartField } from './GenericFunctions';
 
 interface IMarginValues {
 	top?: string;
@@ -19,7 +22,6 @@ interface IMarginValues {
 
 interface IGenerateOptions {
 	fileName?: string;
-	imageBinaryProperty?: string;
 	outputBinaryProperty?: string;
 }
 
@@ -29,7 +31,7 @@ export class CollanaDocs implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Collana Docs',
 		name: 'collanaDocs',
-		icon: 'file:collanaDocs.svg',
+		icon: { light: 'file:collanaDocs.svg', dark: 'file:collanaDocs.dark.svg' },
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{ $parameter["outputFormat"] }}',
@@ -44,9 +46,61 @@ export class CollanaDocs implements INodeType {
 			{
 				name: 'collanaDocsApi',
 				required: true,
+				testedBy: 'collanaDocsApiTest',
 			},
 		],
 		properties: documentFields,
+	};
+
+	methods = {
+		credentialTest: {
+			/**
+			 * There is no endpoint that answers 2xx on the client secret alone, so
+			 * the test posts a deliberately incomplete generate request: a 401 means
+			 * the secret was refused, anything else means it got through and the
+			 * service moved on to validating the payload.
+			 */
+			async collanaDocsApiTest(
+				this: ICredentialTestFunctions,
+				credential: ICredentialsDecrypted,
+			): Promise<INodeCredentialTestResult> {
+				const credentials = credential.data ?? {};
+				const baseUrl = String(credentials.baseUrl ?? '').replace(/\/+$/, '');
+
+				if (baseUrl === '') {
+					return { status: 'Error', message: 'Base URL is empty' };
+				}
+
+				try {
+					// ICredentialTestFunctions exposes `request` and nothing else — there
+					// is no httpRequest on this interface to migrate to.
+					// eslint-disable-next-line @n8n/community-nodes/no-deprecated-workflow-functions
+					await this.helpers.request({
+						method: 'POST',
+						uri: `${baseUrl}${ENDPOINT}`,
+						headers: { 'X-Client-Secret': String(credentials.clientSecret ?? '') },
+						formData: {},
+						simple: true,
+						resolveWithFullResponse: true,
+					});
+				} catch (error) {
+					const statusCode = (error as { statusCode?: number }).statusCode;
+
+					if (statusCode === 401 || statusCode === 403) {
+						return { status: 'Error', message: 'The client secret was refused' };
+					}
+
+					if (statusCode === undefined) {
+						return {
+							status: 'Error',
+							message: `Could not reach ${baseUrl}: ${(error as Error).message}`,
+						};
+					}
+				}
+
+				return { status: 'OK', message: 'Connection established' };
+			},
+		},
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -59,61 +113,44 @@ export class CollanaDocs implements INodeType {
 				const documentData = this.getNodeParameter('documentData', i) as string;
 				const options = this.getNodeParameter('options', i, {}) as IGenerateOptions;
 
-				const form = new FormData();
-				form.append('outputFormat', outputFormat);
-				form.append('documentData', documentData);
+				const fields: IMultipartField[] = [
+					{ name: 'outputFormat', value: outputFormat },
+					{ name: 'documentData', value: documentData },
+				];
 
 				if (outputFormat !== 'XRechnung') {
-					appendIfSet(form, 'headerTemplate', this.getNodeParameter('headerTemplate', i, '') as string);
-					appendIfSet(form, 'bodyTemplate', this.getNodeParameter('bodyTemplate', i, '') as string);
-					appendIfSet(form, 'footerTemplate', this.getNodeParameter('footerTemplate', i, '') as string);
-					appendIfSet(form, 'styleSheet', this.getNodeParameter('styleSheet', i, '') as string);
+					appendIfSet(fields, 'headerTemplate', this.getNodeParameter('headerTemplate', i, '') as string);
+					appendIfSet(fields, 'bodyTemplate', this.getNodeParameter('bodyTemplate', i, '') as string);
+					appendIfSet(fields, 'footerTemplate', this.getNodeParameter('footerTemplate', i, '') as string);
+					appendIfSet(fields, 'styleSheet', this.getNodeParameter('styleSheet', i, '') as string);
 
-					// The service rejects a PDF request that carries no localization, and
-					// blank entries never reach it, so catch that here rather than
-					// spending a round trip on it.
-					const localizationData = (
-						this.getNodeParameter('localizationData', i, []) as string[]
-					).filter((entry) => entry !== undefined && entry !== '');
+					// The service rejects a PDF request that carries no localization, so
+					// catch that here rather than spending a round trip on it.
+					const localizationData = this.getNodeParameter('localizationData', i, '') as string;
 
-					if (localizationData.length === 0) {
+					if (localizationData.trim() === '') {
 						throw new NodeOperationError(
 							this.getNode(),
 							'Localization Data is required when the output format is a PDF',
 							{
 								itemIndex: i,
 								description:
-									'Add at least one localization document. It is reachable in the templates as t.*.',
+									'Pass the localization document for the language you want. It is reachable in the templates as t.*.',
 							},
 						);
 					}
 
-					for (const localization of localizationData) {
-						form.append('localizationData', localization);
-					}
+					fields.push({ name: 'localizationData', value: localizationData });
 
 					const margins = this.getNodeParameter('margins.values', i, {}) as IMarginValues;
 					for (const side of ['top', 'right', 'bottom', 'left'] as const) {
-						appendIfSet(form, `margins.${side}`, margins[side]);
-					}
-
-					if (options.imageBinaryProperty) {
-						const binary = this.helpers.assertBinaryData(i, options.imageBinaryProperty);
-						const buffer = await this.helpers.getBinaryDataBuffer(
-							i,
-							options.imageBinaryProperty,
-						);
-						form.append('image', buffer, {
-							filename: binary.fileName ?? 'image',
-							contentType: binary.mimeType,
-						});
+						appendIfSet(fields, `margins.${side}`, margins[side]);
 					}
 				}
 
-				const response = await collanaDocsBinaryRequest.call(this, 'POST', ENDPOINT, form);
+				const response = await collanaDocsBinaryRequest.call(this, 'POST', ENDPOINT, fields);
 
-				const fileName =
-					options.fileName || response.fileName || defaultFileName(outputFormat);
+				const fileName = options.fileName || response.fileName || defaultFileName(outputFormat);
 				const outputBinaryProperty = options.outputBinaryProperty || 'data';
 
 				returnData.push({
@@ -133,14 +170,23 @@ export class CollanaDocs implements INodeType {
 					pairedItem: { item: i },
 				});
 			} catch (error) {
+				// Errors from the request helper already carry the service's own
+				// message; anything else gets wrapped so the workflow never sees a
+				// raw throw.
+				const failure =
+					error instanceof NodeApiError || error instanceof NodeOperationError
+						? error
+						: new NodeOperationError(this.getNode(), error as Error, { itemIndex: i });
+
 				if (this.continueOnFail()) {
 					returnData.push({
-						json: { error: (error as Error).message },
+						json: { error: failure.message },
 						pairedItem: { item: i },
 					});
 					continue;
 				}
-				throw error;
+
+				throw failure;
 			}
 		}
 
@@ -148,9 +194,9 @@ export class CollanaDocs implements INodeType {
 	}
 }
 
-function appendIfSet(form: FormData, field: string, value: string | undefined): void {
+function appendIfSet(fields: IMultipartField[], name: string, value: string | undefined): void {
 	if (value !== undefined && value !== '') {
-		form.append(field, value);
+		fields.push({ name, value });
 	}
 }
 

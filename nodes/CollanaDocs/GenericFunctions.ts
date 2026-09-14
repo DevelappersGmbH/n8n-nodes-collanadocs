@@ -1,13 +1,51 @@
 import type { IExecuteFunctions, IHttpRequestMethods, JsonObject } from 'n8n-workflow';
 import { NodeApiError } from 'n8n-workflow';
-import FormData from 'form-data';
+import { randomBytes } from 'crypto';
 
 export const CREDENTIALS_NAME = 'collanaDocsApi';
+
+export interface IMultipartField {
+	name: string;
+	value: string;
+}
 
 export interface IBinaryResponse {
 	body: Buffer;
 	contentType: string;
 	fileName?: string;
+}
+
+/**
+ * Builds a multipart/form-data body by hand. Community nodes must ship without
+ * runtime dependencies, so this replaces the usual form-data package.
+ */
+export function buildMultipartBody(fields: IMultipartField[]): {
+	body: Buffer;
+	contentType: string;
+} {
+	const boundary = `----n8nCollanaDocs${randomBytes(16).toString('hex')}`;
+	const chunks: Buffer[] = [];
+
+	for (const field of fields) {
+		const header =
+			`--${boundary}\r\nContent-Disposition: form-data; name="${quote(field.name)}"\r\n\r\n`;
+
+		chunks.push(Buffer.from(header, 'utf8'));
+		chunks.push(Buffer.from(field.value, 'utf8'));
+		chunks.push(Buffer.from('\r\n', 'utf8'));
+	}
+
+	chunks.push(Buffer.from(`--${boundary}--\r\n`, 'utf8'));
+
+	return {
+		body: Buffer.concat(chunks),
+		contentType: `multipart/form-data; boundary=${boundary}`,
+	};
+}
+
+/** Keeps a quote or newline in a field name from breaking out of the header. */
+function quote(value: string): string {
+	return value.replace(/[\r\n"]/g, '');
 }
 
 /**
@@ -18,10 +56,11 @@ export async function collanaDocsBinaryRequest(
 	this: IExecuteFunctions,
 	method: IHttpRequestMethods,
 	endpoint: string,
-	form: FormData,
+	fields: IMultipartField[],
 ): Promise<IBinaryResponse> {
 	const credentials = await this.getCredentials(CREDENTIALS_NAME);
 	const baseUrl = (credentials.baseUrl as string).replace(/\/+$/, '');
+	const { body, contentType } = buildMultipartBody(fields);
 
 	try {
 		const response = await this.helpers.httpRequestWithAuthentication.call(
@@ -30,8 +69,11 @@ export async function collanaDocsBinaryRequest(
 			{
 				method,
 				url: `${baseUrl}${endpoint}`,
-				body: form,
-				headers: form.getHeaders(),
+				body,
+				headers: {
+					'Content-Type': contentType,
+					'Content-Length': String(body.length),
+				},
 				encoding: 'arraybuffer',
 				returnFullResponse: true,
 				json: false,

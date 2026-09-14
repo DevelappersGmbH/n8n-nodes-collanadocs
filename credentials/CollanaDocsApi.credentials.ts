@@ -9,6 +9,8 @@ export class CollanaDocsApi implements ICredentialType {
 
 	displayName = 'Collana Docs API';
 
+	icon = { light: 'file:collanaDocs.svg', dark: 'file:collanaDocs.dark.svg' } as const;
+
 	documentationUrl = 'https://pdfgen.develappers-staging.de/swagger';
 
 	properties: INodeProperties[] = [
