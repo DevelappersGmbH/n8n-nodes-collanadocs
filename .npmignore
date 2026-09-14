@@ -5,7 +5,7 @@ nodes
 credentials
 *.ts
 tsconfig.json
-gulpfile.js
+scripts
 .eslintrc.js
 .eslintrc.prepublish.js
 .prettierrc.js
