@@ -113,20 +113,44 @@ function firstHeader(value: string | string[] | undefined): string | undefined {
 	return Array.isArray(value) ? value[0] : value;
 }
 
-/** Pulls the file name out of a Content-Disposition header, RFC 5987 form included. */
-function parseContentDisposition(header: string | undefined): string | undefined {
+/**
+ * Pulls the file name out of a Content-Disposition header. RFC 6266 says the
+ * extended `filename*` form wins over plain `filename`; RFC 5987 gives it the
+ * shape `charset'language'percent-encoded`, where the language part is
+ * optional but its quotes are not.
+ */
+export function parseContentDisposition(header: string | undefined): string | undefined {
 	if (!header) return undefined;
 
-	const encoded = /filename\*=(?:UTF-8'')?"?([^";]+)"?/i.exec(header);
-	if (encoded?.[1]) {
-		try {
-			return decodeURIComponent(encoded[1]);
-		} catch {
-			return encoded[1];
+	const extended =
+		/filename\*\s*=\s*"?([A-Za-z0-9!#$%&+\-^_`{}~.]+)'([^']*)'([^";,]+)"?/i.exec(header);
+
+	if (extended) {
+		const [, charset, , value] = extended;
+		return decodeExtended(value, charset);
+	}
+
+	return /filename\s*=\s*"?([^";]+)"?/i.exec(header)?.[1];
+}
+
+/** Percent-decodes an RFC 5987 value in the charset the header declares. */
+function decodeExtended(value: string, charset: string): string {
+	const bytes: number[] = [];
+
+	for (let i = 0; i < value.length; i++) {
+		if (value[i] === '%' && /^[0-9a-f]{2}$/i.test(value.slice(i + 1, i + 3))) {
+			bytes.push(parseInt(value.slice(i + 1, i + 3), 16));
+			i += 2;
+		} else {
+			bytes.push(value.charCodeAt(i) & 0xff);
 		}
 	}
 
-	return /filename="?([^";]+)"?/i.exec(header)?.[1];
+	const buffer = Buffer.from(bytes);
+
+	return charset.toLowerCase() === 'iso-8859-1'
+		? buffer.toString('latin1')
+		: buffer.toString('utf8');
 }
 
 /**

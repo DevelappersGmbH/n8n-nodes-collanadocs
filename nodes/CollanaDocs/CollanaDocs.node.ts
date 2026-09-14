@@ -55,10 +55,12 @@ export class CollanaDocs implements INodeType {
 	methods = {
 		credentialTest: {
 			/**
-			 * There is no endpoint that answers 2xx on the client secret alone, so
-			 * the test posts a deliberately incomplete generate request: a 401 means
-			 * the secret was refused, anything else means it got through and the
-			 * service moved on to validating the payload.
+			 * No endpoint answers 2xx on the client secret alone, so the test posts a
+			 * well-formed but deliberately incomplete generate request and reads the
+			 * rejection. Against the real service that is always a 400 — the payload
+			 * parsed and failed validation — while a wrong secret gives 401 and an
+			 * unrelated host gives 404, 405 or a 2xx. Only the 400 is treated as
+			 * proof that a Collana Docs API answered.
 			 */
 			async collanaDocsApiTest(
 				this: ICredentialTestFunctions,
@@ -71,6 +73,11 @@ export class CollanaDocs implements INodeType {
 					return { status: 'Error', message: 'Base URL is empty' };
 				}
 
+				const wrongService = {
+					status: 'Error' as const,
+					message: `${baseUrl} did not answer like a Collana Docs service — check the Base URL`,
+				};
+
 				try {
 					// ICredentialTestFunctions exposes `request` and nothing else — there
 					// is no httpRequest on this interface to migrate to.
@@ -79,9 +86,7 @@ export class CollanaDocs implements INodeType {
 						method: 'POST',
 						uri: `${baseUrl}${ENDPOINT}`,
 						headers: { 'X-Client-Secret': String(credentials.clientSecret ?? '') },
-						formData: {},
-						simple: true,
-						resolveWithFullResponse: true,
+						formData: { outputFormat: 'NurPdf', documentData: '{}' },
 					});
 				} catch (error) {
 					const statusCode = (error as { statusCode?: number }).statusCode;
@@ -90,15 +95,23 @@ export class CollanaDocs implements INodeType {
 						return { status: 'Error', message: 'The client secret was refused' };
 					}
 
+					if (statusCode === 400) {
+						return { status: 'OK', message: 'Connection established' };
+					}
+
 					if (statusCode === undefined) {
 						return {
 							status: 'Error',
 							message: `Could not reach ${baseUrl}: ${(error as Error).message}`,
 						};
 					}
+
+					return { ...wrongService, message: `${wrongService.message} (HTTP ${statusCode})` };
 				}
 
-				return { status: 'OK', message: 'Connection established' };
+				// An incomplete payload must never be accepted, so a 2xx means this is
+				// not the endpoint we are looking for.
+				return wrongService;
 			},
 		},
 	};

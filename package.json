@@ -11,14 +11,14 @@
     "gotenberg"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/develappers/n8n-collanadocs",
+  "homepage": "https://github.com/DevelappersGmbH/n8n-nodes-collanadocs",
   "author": {
     "name": "Develappers GmbH",
     "email": "info.dev@collana.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/develappers/n8n-collanadocs.git"
+    "url": "https://github.com/DevelappersGmbH/n8n-nodes-collanadocs.git"
   },
   "engines": {
     "node": ">=20.15"
