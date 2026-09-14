@@ -1,8 +1,5 @@
 import type {
-	ICredentialTestFunctions,
-	ICredentialsDecrypted,
 	IExecuteFunctions,
-	INodeCredentialTestResult,
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
@@ -44,76 +41,14 @@ export class CollanaDocs implements INodeType {
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
+				// The credential carries its own `test`. A node-side credentialTest
+				// would have to go through the deprecated `this.helpers.request`,
+				// which is all ICredentialTestFunctions offers.
 				name: 'collanaDocsApi',
 				required: true,
-				testedBy: 'collanaDocsApiTest',
 			},
 		],
 		properties: documentFields,
-	};
-
-	methods = {
-		credentialTest: {
-			/**
-			 * No endpoint answers 2xx on the client secret alone, so the test posts a
-			 * well-formed but deliberately incomplete generate request and reads the
-			 * rejection. Against the real service that is always a 400 — the payload
-			 * parsed and failed validation — while a wrong secret gives 401 and an
-			 * unrelated host gives 404, 405 or a 2xx. Only the 400 is treated as
-			 * proof that a Collana Docs API answered.
-			 */
-			async collanaDocsApiTest(
-				this: ICredentialTestFunctions,
-				credential: ICredentialsDecrypted,
-			): Promise<INodeCredentialTestResult> {
-				const credentials = credential.data ?? {};
-				const baseUrl = String(credentials.baseUrl ?? '').replace(/\/+$/, '');
-
-				if (baseUrl === '') {
-					return { status: 'Error', message: 'Base URL is empty' };
-				}
-
-				const wrongService = {
-					status: 'Error' as const,
-					message: `${baseUrl} did not answer like a Collana Docs service — check the Base URL`,
-				};
-
-				try {
-					// ICredentialTestFunctions exposes `request` and nothing else — there
-					// is no httpRequest on this interface to migrate to.
-					// eslint-disable-next-line @n8n/community-nodes/no-deprecated-workflow-functions
-					await this.helpers.request({
-						method: 'POST',
-						uri: `${baseUrl}${ENDPOINT}`,
-						headers: { 'X-Client-Secret': String(credentials.clientSecret ?? '') },
-						formData: { outputFormat: 'NurPdf', documentData: '{}' },
-					});
-				} catch (error) {
-					const statusCode = (error as { statusCode?: number }).statusCode;
-
-					if (statusCode === 401 || statusCode === 403) {
-						return { status: 'Error', message: 'The client secret was refused' };
-					}
-
-					if (statusCode === 400) {
-						return { status: 'OK', message: 'Connection established' };
-					}
-
-					if (statusCode === undefined) {
-						return {
-							status: 'Error',
-							message: `Could not reach ${baseUrl}: ${(error as Error).message}`,
-						};
-					}
-
-					return { ...wrongService, message: `${wrongService.message} (HTTP ${statusCode})` };
-				}
-
-				// An incomplete payload must never be accepted, so a 2xx means this is
-				// not the endpoint we are looking for.
-				return wrongService;
-			},
-		},
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
