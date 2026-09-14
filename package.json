@@ -1,6 +1,6 @@
 {
   "name": "@develappers/n8n-nodes-collanadocs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "n8n node for the Collana Docs PDF / E-Invoice service (HTML to PDF, ZUGFeRD, XRechnung)",
   "keywords": [
     "n8n-community-node-package",
