@@ -1,0 +1,47 @@
+{
+  "name": "Collana Docs - Rechnung (XRechnung XML)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "44444444-4444-4444-8444-444444444441",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "outputFormat": "XRechnung",
+        "documentData": "{\n  \"schema_version\": 1,\n  \"document\": {\n    \"number\": \"RE-2026-0187\",\n    \"date\": \"14.09.2026\",\n    \"currency\": \"EUR\",\n    \"order_number\": \"BE-88231\",\n    \"delivery_note_number\": \"LS-2026-0412\",\n    \"payment_due_date\": \"14.10.2026\",\n    \"delivery_terms\": \"frei Baustelle\"\n  },\n  \"sender\": {\n    \"company\": {\n      \"name\": \"Spreebogen Gerüstbau GmbH\"\n    },\n    \"address\": {\n      \"name\": {\n        \"line1\": \"Spreebogen Gerüstbau GmbH\",\n        \"line2\": \"\"\n      },\n      \"street\": {\n        \"line1\": \"Am Nordhafen 7\",\n        \"line2\": \"\"\n      },\n      \"city\": \"13353 Berlin\"\n    }\n  },\n  \"customer\": {\n    \"id\": \"K-10045\",\n    \"company\": {\n      \"name\": \"Hausverwaltung Prenzlauer Bogen GmbH\"\n    },\n    \"address\": {\n      \"name\": {\n        \"line1\": \"Hausverwaltung Prenzlauer Bogen GmbH\",\n        \"line2\": \"z. Hd. Frau Schneider\"\n      },\n      \"street\": {\n        \"line1\": \"Greifswalder Str. 88\",\n        \"line2\": \"\"\n      },\n      \"city\": \"10409 Berlin\"\n    }\n  },\n  \"recipient\": {\n    \"company\": {\n      \"name\": \"\"\n    },\n    \"address\": {\n      \"name\": {\n        \"line1\": \"\",\n        \"line2\": \"\"\n      },\n      \"street\": {\n        \"line1\": \"\",\n        \"line2\": \"\"\n      },\n      \"city\": \"\"\n    }\n  },\n  \"delivery\": {\n    \"requested_date\": \"05.10.2026\",\n    \"address\": {\n      \"name\": {\n        \"line1\": \"Wohnanlage Nordkiez\",\n        \"line2\": \"Bauleitung, Bauteil C\"\n      },\n      \"street\": {\n        \"line1\": \"Seestr. 92\",\n        \"line2\": \"\"\n      },\n      \"city\": \"13353 Berlin\"\n    }\n  },\n  \"sales\": {\n    \"internal_contact\": {\n      \"name\": \"Laura Berger\",\n      \"phone\": \"030 23125 217\",\n      \"email\": \"l.berger@spreebogen-geruestbau.example\"\n    }\n  },\n  \"references\": {\n    \"free_text\": [\n      \"Ihre Bestellung vom 05.09.2026\",\n      \"Projekt: Fassadensanierung Wohnanlage Nordkiez\"\n    ]\n  },\n  \"content\": [\n    {\n      \"key\": \"intro\",\n      \"text\": \"<p>Sehr geehrte Damen und Herren,<br>für die Einrüstung der Wohnanlage Nordkiez berechnen wir Ihnen vereinbarungsgemäß die folgenden Leistungen.</p>\"\n    },\n    {\n      \"key\": \"outro\",\n      \"text\": \"<p>Bitte überweisen Sie den Rechnungsbetrag unter Angabe der Rechnungsnummer bis zum 14.10.2026. Die Leistung wurde im September 2026 erbracht.</p>\"\n    }\n  ],\n  \"line_items\": [\n    {\n      \"line_type\": \"text\",\n      \"product\": {\n        \"description\": \"Bauabschnitt Nord – Fassadengerüst\",\n        \"details\": \"Auf- und Abbau gemäß Aufmaß vom 02.09.2026, Ausführung nach DIN EN 12811 und TRBS 2121.\"\n      }\n    },\n    {\n      \"line_type\": \"article\",\n      \"position\": \"10\",\n      \"quantity\": \"640,00\",\n      \"unit_of_measure\": \"m²\",\n      \"product\": {\n        \"description\": \"Fassadengerüst Lastklasse 3\",\n        \"details\": \"Breitenklasse W06, Gerüsthöhe bis 14 m, inkl. Verankerung, Seitenschutz und Bordbrettern. Preis je m² Gerüstfläche, Standzeit 4 Wochen inklusive.\"\n      },\n      \"unit_price\": \"8,90\",\n      \"net_amount\": \"5.696,00\",\n      \"tax_rate\": \"19\"\n    },\n    {\n      \"line_type\": \"article\",\n      \"position\": \"20\",\n      \"quantity\": \"48,00\",\n      \"unit_of_measure\": \"m\",\n      \"product\": {\n        \"description\": \"Dachfanggerüst\",\n        \"details\": \"Schutzwand 2,00 m über Traufkante, inkl. Auffangnetz und Anschlagpunkten für die Dachdeckerarbeiten.\"\n      },\n      \"unit_price\": \"22,50\",\n      \"net_amount\": \"1.080,00\",\n      \"tax_rate\": \"19\"\n    },\n    {\n      \"line_type\": \"article\",\n      \"position\": \"30\",\n      \"quantity\": \"12,00\",\n      \"unit_of_measure\": \"Std\",\n      \"product\": {\n        \"description\": \"Gerüstbauer-Stunden für Umbauten\",\n        \"details\": \"Umsetzen von Gerüstlagen und Belägen auf Abruf, Abrechnung nach Aufwand.\"\n      },\n      \"unit_price\": \"62,00\",\n      \"net_amount\": \"744,00\",\n      \"tax_rate\": \"19\"\n    }\n  ],\n  \"totals\": {\n    \"net\": \"7.520,00\",\n    \"vat_rates\": [\n      {\n        \"rate\": \"19\",\n        \"amount\": \"1.428,80\"\n      },\n      {\n        \"rate\": \"7\",\n        \"amount\": \"0,00\"\n      }\n    ],\n    \"grand_total\": \"8.948,80\"\n  },\n  \"payment\": {\n    \"terms\": \"30 Tage netto\",\n    \"method\": \"Überweisung\",\n    \"prepayment\": false\n  }\n}\n",
+        "options": {
+          "fileName": "rechnung-RE-2026-0187.xml"
+        }
+      },
+      "id": "44444444-4444-4444-8444-444444444442",
+      "name": "Collana Docs",
+      "type": "n8n-nodes-collanadocs.collanaDocs",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Collana Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

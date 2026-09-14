@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "document": {
+    "number": "RE-2026-0187",
+    "date": "14.09.2026",
+    "currency": "EUR",
+    "order_number": "BE-88231",
+    "delivery_note_number": "LS-2026-0412",
+    "payment_due_date": "14.10.2026",
+    "delivery_terms": "frei Baustelle"
+  },
+  "sender": {
+    "company": {
+      "name": "Spreebogen Gerüstbau GmbH"
+    },
+    "address": {
+      "name": {
+        "line1": "Spreebogen Gerüstbau GmbH",
+        "line2": ""
+      },
+      "street": {
+        "line1": "Am Nordhafen 7",
+        "line2": ""
+      },
+      "city": "13353 Berlin"
+    }
+  },
+  "customer": {
+    "id": "K-10045",
+    "company": {
+      "name": "Hausverwaltung Prenzlauer Bogen GmbH"
+    },
+    "address": {
+      "name": {
+        "line1": "Hausverwaltung Prenzlauer Bogen GmbH",
+        "line2": "z. Hd. Frau Schneider"
+      },
+      "street": {
+        "line1": "Greifswalder Str. 88",
+        "line2": ""
+      },
+      "city": "10409 Berlin"
+    }
+  },
+  "recipient": {
+    "company": {
+      "name": ""
+    },
+    "address": {
+      "name": {
+        "line1": "",
+        "line2": ""
+      },
+      "street": {
+        "line1": "",
+        "line2": ""
+      },
+      "city": ""
+    }
+  },
+  "delivery": {
+    "requested_date": "05.10.2026",
+    "address": {
+      "name": {
+        "line1": "Wohnanlage Nordkiez",
+        "line2": "Bauleitung, Bauteil C"
+      },
+      "street": {
+        "line1": "Seestr. 92",
+        "line2": ""
+      },
+      "city": "13353 Berlin"
+    }
+  },
+  "sales": {
+    "internal_contact": {
+      "name": "Laura Berger",
+      "phone": "030 23125 217",
+      "email": "l.berger@spreebogen-geruestbau.example"
+    }
+  },
+  "references": {
+    "free_text": [
+      "Ihre Bestellung vom 05.09.2026",
+      "Projekt: Fassadensanierung Wohnanlage Nordkiez"
+    ]
+  },
+  "content": [
+    {
+      "key": "intro",
+      "text": "<p>Sehr geehrte Damen und Herren,<br>für die Einrüstung der Wohnanlage Nordkiez berechnen wir Ihnen vereinbarungsgemäß die folgenden Leistungen.</p>"
+    },
+    {
+      "key": "outro",
+      "text": "<p>Bitte überweisen Sie den Rechnungsbetrag unter Angabe der Rechnungsnummer bis zum 14.10.2026. Die Leistung wurde im September 2026 erbracht.</p>"
+    }
+  ],
+  "line_items": [
+    {
+      "line_type": "text",
+      "product": {
+        "description": "Bauabschnitt Nord – Fassadengerüst",
+        "details": "Auf- und Abbau gemäß Aufmaß vom 02.09.2026, Ausführung nach DIN EN 12811 und TRBS 2121."
+      }
+    },
+    {
+      "line_type": "article",
+      "position": "10",
+      "quantity": "640,00",
+      "unit_of_measure": "m²",
+      "product": {
+        "description": "Fassadengerüst Lastklasse 3",
+        "details": "Breitenklasse W06, Gerüsthöhe bis 14 m, inkl. Verankerung, Seitenschutz und Bordbrettern. Preis je m² Gerüstfläche, Standzeit 4 Wochen inklusive."
+      },
+      "unit_price": "8,90",
+      "net_amount": "5.696,00",
+      "tax_rate": "19"
+    },
+    {
+      "line_type": "article",
+      "position": "20",
+      "quantity": "48,00",
+      "unit_of_measure": "m",
+      "product": {
+        "description": "Dachfanggerüst",
+        "details": "Schutzwand 2,00 m über Traufkante, inkl. Auffangnetz und Anschlagpunkten für die Dachdeckerarbeiten."
+      },
+      "unit_price": "22,50",
+      "net_amount": "1.080,00",
+      "tax_rate": "19"
+    },
+    {
+      "line_type": "article",
+      "position": "30",
+      "quantity": "12,00",
+      "unit_of_measure": "Std",
+      "product": {
+        "description": "Gerüstbauer-Stunden für Umbauten",
+        "details": "Umsetzen von Gerüstlagen und Belägen auf Abruf, Abrechnung nach Aufwand."
+      },
+      "unit_price": "62,00",
+      "net_amount": "744,00",
+      "tax_rate": "19"
+    }
+  ],
+  "totals": {
+    "net": "7.520,00",
+    "vat_rates": [
+      {
+        "rate": "19",
+        "amount": "1.428,80"
+      },
+      {
+        "rate": "7",
+        "amount": "0,00"
+      }
+    ],
+    "grand_total": "8.948,80"
+  },
+  "payment": {
+    "terms": "30 Tage netto",
+    "method": "Überweisung",
+    "prepayment": false
+  }
+}
