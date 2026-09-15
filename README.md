@@ -20,10 +20,11 @@ Create a **Collana Docs API** credential with:
 
 | Field | Description |
 | --- | --- |
-| Base URL | Root URL of your instance, e.g. `https://pdfgen.example.com`. Deliberately has no default, so nothing is posted to the wrong environment by accident. |
+| Base URL | Root URL of your instance. Defaults to `https://collanadocs.develappers.de`; point it at your own deployment if you run one. |
 | Client Secret | Shared secret, sent as the `X-Client-Secret` header |
 
-The secret is the one the service requires for its `/v1/generate` endpoints.
+The secret is the one the service requires for its `/v1` endpoints. **Test** on the credential calls
+`GET /v1/auth/check`, which verifies the secret without rendering a document.
 
 ## What it does
 
