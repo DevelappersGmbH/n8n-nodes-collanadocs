@@ -1,7 +1,6 @@
 # @develappers/n8n-nodes-collanadocs
 
-An [n8n](https://n8n.io) community node for the Collana Docs service — HTML → PDF (Gotenberg),
-ZUGFeRD 2.3 (PDF/A-3 + XML) and XRechnung 3.x.
+An [n8n](https://n8n.io) community node for the Collana Docs service — HTML → PDF (Gotenberg), ZUGFeRD 2.3 (PDF/A-3 + XML) and XRechnung 3.x.
 
 ## Installation
 
@@ -30,10 +29,6 @@ The secret is the one the service requires for its `/v1` endpoints. **Test** on 
 
 The node renders one document per input item through `POST /v1/generate`.
 
-The service also exposes `POST /v1/generate/offer`, which the node deliberately does not use: that
-endpoint always renders a PDF and rejects a request without templates, so it silently ignores an
-`XRechnung` output format. `/v1/generate` covers the same ground without that trap.
-
 ### Parameters
 
 - **Output Format** — `PDF Only`, `PDF With ZUGFeRD` or `XRechnung (XML)`.
@@ -51,16 +46,14 @@ endpoint always renders a PDF and rejects a request without templates, so it sil
   (default `data`).
 - **Options → File Name** — overrides the name the service reports.
 
-Templates, style sheet, localization and margins are hidden for `XRechnung`, which produces XML
-without rendering a page.
+Templates, style sheet, localization and margins are hidden for `XRechnung`, which produces XML without rendering a page.
 
 ## Templates and n8n expressions
 
 Scriban and n8n both use `{{ }}`. Paste a template into a field that is switched to **Expression**
 and n8n tries to evaluate the template itself, which fails with `[ERROR: invalid syntax]`.
 
-Keep the four template fields on **Fixed**. Hover the parameter and use the Fixed/Expression
-toggle; on Fixed the text is passed through untouched, braces and all.
+Keep the four template fields on **Fixed**. Hover the parameter and use the Fixed/Expression toggle; on Fixed the text is passed through untouched, braces and all.
 
 Expression mode is still the right choice when the template comes from somewhere else — the field
 then holds a single expression such as `{{ $json.bodyTemplate }}`, and the Scriban braces arrive in
@@ -78,16 +71,13 @@ The service validates **Document Data** against its own JSON schema and is stric
   `invoice_date`, `sender_name`, `sender_address`, `sender_city`, `customer_name`,
   `customer_address`, `customer_city`, and at least one `line_items` entry (BR-16).
 
-A template that reads a field the data does not have fails the whole request with a 500 — there
-is no silent fallback to an empty string, so keep templates and data in sync.
+A template that reads a field the data does not have fails the whole request with a 500 — there is no silent fallback to an empty string, so keep templates and data in sync.
 
-Images must be embedded as `data:` URIs; the renderer does not fetch external URLs, so a logo or
-any other artwork has to travel inside the template.
+Images must be embedded as `data:` URIs; the renderer does not fetch external URLs, so a logo or any other artwork has to travel inside the template.
 
 Validation errors come back verbatim from the service, naming the offending JSON path.
 
-See [examples](examples) for three complete working requests — an offer as PDF, and the matching
-invoice both as PDF with ZUGFeRD and as XRechnung XML — each with an importable n8n workflow.
+See [examples](examples) for three complete working requests — an offer as PDF, and the matching invoice both as PDF with ZUGFeRD and as XRechnung XML — each with an importable n8n workflow.
 
 ## Output
 
