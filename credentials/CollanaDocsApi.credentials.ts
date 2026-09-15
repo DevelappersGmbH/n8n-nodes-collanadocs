@@ -5,7 +5,7 @@ import type {
 	INodeProperties,
 } from 'n8n-workflow';
 
-/** The instance Develappers runs; an own deployment overrides it. */
+/** The instance Develappers runs; a self-hosted deployment overrides it. */
 const DEFAULT_BASE_URL = 'https://collanadocs.develappers.de';
 
 export class CollanaDocsApi implements ICredentialType {
