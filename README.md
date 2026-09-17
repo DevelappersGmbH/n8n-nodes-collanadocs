@@ -2,6 +2,9 @@
 
 An [n8n](https://n8n.io) community node for the Collana Docs service — HTML → PDF (Gotenberg), ZUGFeRD 2.3 (PDF/A-3 + XML) and XRechnung 3.x.
 
+More about the service, its plans and its document formats:
+[**Collana Docs**](https://www.develappers.de/products/collanadocs)
+
 ## Installation
 
 In n8n: **Settings → Community Nodes → Install**, then enter `@develappers/n8n-nodes-collanadocs`.
@@ -109,6 +112,14 @@ npm run lint:fix  # the same, with auto-fixes applied
 
 The package ships without runtime dependencies, which n8n Cloud requires; `npm run lint` fails if
 one is added.
+
+## Contributing
+
+Bug reports, feature requests and pull requests are welcome — see
+[CONTRIBUTING.md](CONTRIBUTING.md) for the setup, the ground rules and what makes a useful bug
+report. Participation is governed by our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+Security issues do not belong in a public issue: mail info.dev@collana.com instead.
 
 ## License
 
