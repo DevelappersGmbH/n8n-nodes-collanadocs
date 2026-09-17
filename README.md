@@ -1,6 +1,6 @@
 # @develappers/n8n-nodes-collanadocs
 
-An [n8n](https://n8n.io) community node for the Collana Docs service — HTML → PDF (Gotenberg), ZUGFeRD 2.3 (PDF/A-3 + XML) and XRechnung 3.x.
+An [n8n](https://n8n.io) community node for the Collana Docs service — HTML → PDF, ZUGFeRD 2.3 (PDF/A-3 + XML) and XRechnung 3.x.
 
 More about the service, its plans and its document formats:
 [**Collana Docs**](https://www.develappers.de/products/collanadocs)
