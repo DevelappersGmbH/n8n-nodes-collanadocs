@@ -20,12 +20,12 @@ export const documentFields: INodeProperties[] = [
 			{
 				name: 'PDF With ZUGFeRD',
 				value: 'PdfMitZugferd',
-				description: 'PDF/A-3 with an embedded ZUGFeRD 2.3 invoice XML',
+				description: 'PDF/A-3 with an embedded ZUGFeRD 2.5 invoice XML (profile EN 16931)',
 			},
 			{
 				name: 'XRechnung (XML)',
 				value: 'XRechnung',
-				description: 'XRechnung 3.x XML only, no PDF rendering',
+				description: 'XRechnung 3.0 XML only, no PDF rendering',
 			},
 		],
 		default: 'NurPdf',
