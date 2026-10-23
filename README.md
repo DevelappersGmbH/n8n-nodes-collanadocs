@@ -1,6 +1,6 @@
 # @develappers/n8n-nodes-collanadocs
 
-An [n8n](https://n8n.io) community node for the Collana Docs service — HTML → PDF, ZUGFeRD 2.3 (PDF/A-3 + XML) and XRechnung 3.x.
+An [n8n](https://n8n.io) community node for the Collana Docs service — HTML → PDF, ZUGFeRD 2.5 with profile EN 16931 (PDF/A-3 + XML) and XRechnung 3.0 (currently 3.0.2).
 
 More about the service, its plans and its document formats:
 [**Collana Docs**](https://www.develappers.de/products/collanadocs)
@@ -70,17 +70,70 @@ The service validates **Document Data** against its own JSON schema and is stric
 - A `document` object must be present at the root.
 - **Every numeric value is a string** — `position`, `tax_rate`, `quantity`, `unit_price`,
   `net_amount`, `totals.*` and `vat_rates[].rate`. Sending `19` instead of `"19"` is rejected.
-- For `XRechnung` and `PDF With ZUGFeRD`, the invoice fields are mandatory: `invoice_number`,
-  `invoice_date`, `sender_name`, `sender_address`, `sender_city`, `customer_name`,
-  `customer_address`, `customer_city`, and at least one `line_items` entry (BR-16).
+- For `XRechnung` and `PDF With ZUGFeRD`, further fields are mandatory — see
+  [Required fields for e-invoices](#required-fields-for-e-invoices).
 
-A template that reads a field the data does not have fails the whole request with a 500 — there is no silent fallback to an empty string, so keep templates and data in sync.
+A template that reads a field the data does not have renders it empty and the request succeeds.
+Reading through a missing intermediate object (`d.missing.field` when `d.missing` does not exist)
+and Scriban syntax errors fail the request with a 400 whose message names the template part and
+the position.
 
 Images must be embedded as `data:` URIs; the renderer does not fetch external URLs, so a logo or any other artwork has to travel inside the template.
 
 Validation errors come back verbatim from the service, naming the offending JSON path.
 
-See [examples](examples) for three complete working requests — an offer as PDF, and the matching invoice both as PDF with ZUGFeRD and as XRechnung XML — each with an importable n8n workflow.
+See [examples](examples) for five complete working requests — an offer as PDF, the matching invoice both as PDF with ZUGFeRD and as XRechnung XML, a credit note on that invoice, and an XRechnung to a public-sector buyer with a Leitweg-ID — each with an importable n8n workflow.
+
+### Required fields for e-invoices
+
+These rules apply from Collana Docs **1.10.0**. An older instance ignores fields it does not know
+(the schema allows additional properties), so a credit note or a Leitweg-ID sent to it is not
+rejected but silently missing from the e-invoice.
+
+A request for `XRechnung` or `PDF With ZUGFeRD` that misses any of these fields is rejected with a
+400 listing all missing fields by their path. Invalid values — a foreign currency, a tax number
+instead of a VAT ID, an invalid Leitweg-ID or electronic address scheme — are rejected one at a
+time, the currency first. Some of these messages are in German. `PDF Only` requires none of the
+fields.
+
+`<buyer>` is `recipient` if `recipient.company.name` is set, otherwise `customer`; the error names
+the party actually used.
+
+| Field | XRechnung | PDF With ZUGFeRD | Condition |
+| --- | --- | --- | --- |
+| `document.number`, `document.date` | ✓ | ✓ | – |
+| `sender.company.name`, `sender.address.street.line1`, `sender.address.city` | ✓ | ✓ | – |
+| `<buyer>.company.name`, `<buyer>.address.street.line1`, `<buyer>.address.city` | ✓ | ✓ | – |
+| `line_items[]` | ✓ | ✓ | at least one entry with `line_type` `article` (BR-16) |
+| `payment.terms` or `payment.due_date` | ✓ | ✓ | while an amount is due (BR-CO-25) |
+| `sender.company.tax_number` | ✓ | ✓ | VAT ID with country prefix, e.g. `DE123456789` — a German tax number (Steuernummer) is rejected; the same applies to `<buyer>.company.tax_number` if set |
+| `sender.contact_details.email` | ✓ | – | seller contact and electronic address (BR-DE-2) |
+| `sender.contact_details.phone` | ✓ | – | seller contact (BR-DE-6) |
+| `sender.bank.iban` | ✓ | – | payment instructions (BR-DE-1) |
+| `<buyer>.electronic_address`, `<buyer>.leitweg_id`, `<buyer>.contact_details.email` or `<buyer>.company.tax_number` | one of them | – | buyer's electronic address (BT-49) |
+| `<buyer>.electronic_address.scheme_id` and `.id` | ✓ | ✓ | both, once either is set; `scheme_id` from the CEF EAS code list, case-sensitive (`EM`, not `em`) |
+| `references.preceding_invoices[]` | ✓ | ✓ | required for `document.invoice_type` `correction`, recommended for `credit_note`; an entry with a `date` needs a `number` |
+| `totals.allowances[]` / `totals.charges[]` | ✓ | ✓ | once a document discount, freight or packaging falls on line items with several VAT rates |
+
+- **Buyer's electronic address:** the explicit `electronic_address` (e.g. a Peppol ID) wins, then
+  the Leitweg-ID, then the buyer's email, then the buyer's VAT ID. A domestic business customer
+  without a VAT ID only needs an email address.
+- **Public sector:** German public-sector buyers route e-invoices by their Leitweg-ID, set as
+  `<buyer>.leitweg_id`. It becomes the buyer reference and, unless `electronic_address` is set, the
+  electronic address. The service checks its format and check digits and rejects an invalid one
+  with a 400. Where an authority's Peppol ID differs from its Leitweg-ID, put the Peppol ID into
+  `<buyer>.electronic_address`, e.g. `{ "scheme_id": "0204", "id": "04000000-FHBXLAND-82" }`.
+- **Invoice type:** `document.invoice_type` is `invoice` (default), `partial_invoice`,
+  `credit_note` or `correction`. `credit_note` (type code 381) is a credit note correcting an
+  invoice in the customer's favour, not a self-billed invoice (Gutschrift under § 14 (2) UStG).
+  It carries positive amounts; the invoices it refers to go into
+  `references.preceding_invoices[]` as `{ "number", "date" }`.
+- **Formats:** dates as `DD.MM.YYYY`, amounts in German notation as strings (`"1.234,56"`).
+- **Currency:** e-invoices are issued in EUR only. A `document.currency` other than empty or `EUR`
+  is rejected with a 400; `PDF Only` is not affected.
+
+The authoritative list is the service's own validation; its error message names every missing
+field.
 
 ## Output
 

@@ -3,15 +3,12 @@
   "document": {
     "number": "RE-2026-0187",
     "date": "14.09.2026",
-    "currency": "EUR",
-    "order_number": "BE-88231",
-    "delivery_note_number": "LS-2026-0412",
-    "payment_due_date": "14.10.2026",
-    "delivery_terms": "frei Baustelle"
+    "currency": "EUR"
   },
   "sender": {
     "company": {
-      "name": "Spreebogen Gerüstbau GmbH"
+      "name": "Spreebogen Gerüstbau GmbH",
+      "tax_number": "DE815249631"
     },
     "address": {
       "name": {
@@ -23,6 +20,16 @@
         "line2": ""
       },
       "city": "13353 Berlin"
+    },
+    "contact_details": {
+      "phone": "030 23125 200",
+      "email": "info@spreebogen-geruestbau.example",
+      "website": "www.spreebogen-geruestbau.example"
+    },
+    "bank": {
+      "name": "Spreebank Berlin",
+      "iban": "DE39 9999 9999 0002 0260 42",
+      "swift": "SPREDEBBXXX"
     }
   },
   "customer": {
@@ -40,6 +47,9 @@
         "line2": ""
       },
       "city": "10409 Berlin"
+    },
+    "contact_details": {
+      "email": "rechnungseingang@prenzlauer-bogen.example"
     }
   },
   "recipient": {
@@ -60,6 +70,7 @@
   },
   "delivery": {
     "requested_date": "05.10.2026",
+    "terms": "frei Baustelle",
     "address": {
       "name": {
         "line1": "Wohnanlage Nordkiez",
@@ -80,6 +91,8 @@
     }
   },
   "references": {
+    "order_id": "BE-88231",
+    "delivery_note_id": "LS-2026-0412",
     "free_text": [
       "Ihre Bestellung vom 05.09.2026",
       "Projekt: Fassadensanierung Wohnanlage Nordkiez"
@@ -160,6 +173,6 @@
   "payment": {
     "terms": "30 Tage netto",
     "method": "Überweisung",
-    "prepayment": false
+    "due_date": "14.10.2026"
   }
 }

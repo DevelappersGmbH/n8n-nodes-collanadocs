@@ -70,22 +70,22 @@
                 <div class="label">{{ t.common.customer_number }}:</div>
                 <div class="value">{{ d.customer.id }}</div>
             </div>
-            {{ if d.document.order_number != null && d.document.order_number != "" }}
+            {{ if d.references.order_id != null && d.references.order_id != "" }}
             <div class="detail-row">
                 <div class="label">{{ t.invoice.order_number }}:</div>
-                <div class="value">{{ d.document.order_number }}</div>
+                <div class="value">{{ d.references.order_id }}</div>
             </div>
             {{ end }}
-            {{ if d.document.delivery_note_number != null && d.document.delivery_note_number != "" }}
+            {{ if d.references.delivery_note_id != null && d.references.delivery_note_id != "" }}
             <div class="detail-row">
                 <div class="label">{{ t.invoice.delivery_note_number }}:</div>
-                <div class="value">{{ d.document.delivery_note_number }}</div>
+                <div class="value">{{ d.references.delivery_note_id }}</div>
             </div>
             {{ end }}
-            {{ if d.document.payment_due_date != null && d.document.payment_due_date != "" }}
+            {{ if d.payment.due_date != null && d.payment.due_date != "" }}
             <div class="detail-row">
                 <div class="label">{{ t.invoice.payment_due_date }}:</div>
-                <div class="value">{{ d.document.payment_due_date }}</div>
+                <div class="value">{{ d.payment.due_date }}</div>
             </div>
             {{ end }}
 
@@ -222,18 +222,15 @@
     if d.payment.method != null && d.payment.method != ""
         terms_parts = terms_parts | array.add d.payment.method
     end
-    if d.payment.prepayment
-        terms_parts = terms_parts | array.add t.common.prepayment
-    end
 }}
     <div class="terms-row">
         <span class="terms-label">{{ t.common.payment_terms }}:</span>
         <span class="terms-value">{{ terms_parts | array.join " · " }}</span>
     </div>
-    {{ if d.document.delivery_terms != null && d.document.delivery_terms != "" }}
+    {{ if d.delivery.terms != null && d.delivery.terms != "" }}
     <div class="terms-row">
         <span class="terms-label">{{ t.invoice.delivery_terms }}:</span>
-        <span class="terms-value">{{ d.document.delivery_terms }}</span>
+        <span class="terms-value">{{ d.delivery.terms }}</span>
     </div>
     {{ end }}
 </div>
