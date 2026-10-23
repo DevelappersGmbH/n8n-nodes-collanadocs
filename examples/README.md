@@ -46,16 +46,29 @@ right in a rendered document without pointing at anybody:
 - `.example` is reserved for documentation by RFC 2606,
 - the VAT ID passes the German Modulo 11,10 check.
 
+The footer prints these identifiers for the PDF. The invoice data carries them as well, because an
+e-invoice needs them as structured fields: VAT ID, phone, email and IBAN of the seller, and an
+email address of the buyer.
+
 ## What the samples exercise
 
 - a `text` line item without position or price, alongside priced `article` items,
 - a second address block that stays hidden because `recipient.company.name` is empty,
 - a VAT rate (7 %) listed in `totals.vat_rates` that no line item uses, so the template has to
   suppress that row,
-- on the invoice, the optional `order_number`, `delivery_note_number` and `payment_due_date` rows,
-  each wrapped in a guard so the template still renders when they are absent.
+- on the invoice, the optional order number (`references.order_id`), delivery note number
+  (`references.delivery_note_id`), due date (`payment.due_date`) and delivery terms
+  (`delivery.terms`), each wrapped in a guard so the template still renders when they are absent.
+  All four are Contract fields; the order number and the due date also reach the e-invoice XML,
+- on the invoice, every field an XRechnung requires: the seller's VAT ID
+  (`sender.company.tax_number`), contact details (`sender.contact_details`) and IBAN
+  (`sender.bank.iban`), and the buyer's email address (`customer.contact_details.email`), which the
+  service writes as the buyer's electronic address.
 
 ## Document data contract
+
+The invoice examples need Collana Docs 1.10.0 or later. An older instance accepts them but ignores
+the fields it does not know yet, so its e-invoice silently lacks them.
 
 The service validates `document.json` against its own JSON schema and is strict about it:
 
@@ -63,13 +76,16 @@ The service validates `document.json` against its own JSON schema and is strict 
 - A `document` object must be present at the root.
 - **Every numeric value is a string**: `position`, `tax_rate`, `quantity`, `unit_price`,
   `net_amount`, `totals.*` and `vat_rates[].rate`. Sending `19` instead of `"19"` is rejected.
-- For `XRechnung` and `PdfMitZugferd` the invoice fields are mandatory. The service reports them
-  under flat names — `invoice_number`, `invoice_date`, `sender_name`, `sender_address`,
-  `sender_city`, `customer_name`, `customer_address`, `customer_city` and at least one `line_items`
-  entry (BR-16) — but derives them from the nested structure these samples use.
+- For `XRechnung` and `PdfMitZugferd` further fields are mandatory; the service names each missing
+  one by its path, e.g. `sender.company.tax_number`. The full list per format is in the
+  [main README](../README.md#required-fields-for-e-invoices).
 
-A template that reads a field the data does not have makes the whole request fail with a 500 —
-there is no silent fallback to an empty string, so keep templates and data in sync.
+A template that reads a field the data does not have renders it empty. Reading through a missing
+intermediate object (`d.missing.field`) and Scriban syntax errors fail the request with a 400 that
+names the template part and the position.
 
-The generated XML is what the service produces; before going live, run it through a real XRechnung
-validator to confirm it satisfies the CIUS rules your recipients enforce.
+The output of both invoice examples has been checked: the XRechnung XML with the
+[KoSIT validator](https://github.com/itplr-kosit/validator) and its XRechnung 3.0.2 configuration,
+the ZUGFeRD PDF and its embedded XML with the [Mustang validator](https://github.com/ZUGFeRD/mustangproject).
+For your own data, run the output through a validator before going live to confirm it satisfies
+the rules your recipients enforce.
