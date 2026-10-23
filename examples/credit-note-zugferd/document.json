@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "document": {
+    "number": "GS-2026-0021",
+    "date": "02.10.2026",
+    "currency": "EUR",
+    "invoice_type": "credit_note"
+  },
+  "sender": {
+    "company": {
+      "name": "Spreebogen Gerüstbau GmbH",
+      "tax_number": "DE815249631"
+    },
+    "address": {
+      "name": {
+        "line1": "Spreebogen Gerüstbau GmbH",
+        "line2": ""
+      },
+      "street": {
+        "line1": "Am Nordhafen 7",
+        "line2": ""
+      },
+      "city": "13353 Berlin"
+    },
+    "contact_details": {
+      "phone": "030 23125 200",
+      "email": "info@spreebogen-geruestbau.example",
+      "website": "www.spreebogen-geruestbau.example"
+    }
+  },
+  "customer": {
+    "id": "K-10045",
+    "company": {
+      "name": "Hausverwaltung Prenzlauer Bogen GmbH"
+    },
+    "address": {
+      "name": {
+        "line1": "Hausverwaltung Prenzlauer Bogen GmbH",
+        "line2": "z. Hd. Frau Schneider"
+      },
+      "street": {
+        "line1": "Greifswalder Str. 88",
+        "line2": ""
+      },
+      "city": "10409 Berlin"
+    },
+    "contact_details": {
+      "email": "rechnungseingang@prenzlauer-bogen.example"
+    }
+  },
+  "recipient": {
+    "company": {
+      "name": ""
+    },
+    "address": {
+      "name": {
+        "line1": "",
+        "line2": ""
+      },
+      "street": {
+        "line1": "",
+        "line2": ""
+      },
+      "city": ""
+    }
+  },
+  "delivery": {
+    "address": {
+      "name": {
+        "line1": "Wohnanlage Nordkiez",
+        "line2": "Bauleitung, Bauteil C"
+      },
+      "street": {
+        "line1": "Seestr. 92",
+        "line2": ""
+      },
+      "city": "13353 Berlin"
+    }
+  },
+  "sales": {
+    "internal_contact": {
+      "name": "Laura Berger",
+      "phone": "030 23125 217",
+      "email": "l.berger@spreebogen-geruestbau.example"
+    }
+  },
+  "references": {
+    "order_id": "BE-88231",
+    "preceding_invoices": [
+      {
+        "number": "RE-2026-0187",
+        "date": "14.09.2026"
+      }
+    ],
+    "free_text": [
+      "Schlussaufmaß vom 29.09.2026",
+      "Projekt: Fassadensanierung Wohnanlage Nordkiez"
+    ]
+  },
+  "content": [
+    {
+      "key": "intro",
+      "text": "<p>Sehr geehrte Damen und Herren,<br>laut Schlussaufmaß wurde an der Wohnanlage Nordkiez weniger Fassadenfläche eingerüstet als in unserer Rechnung RE-2026-0187 berechnet. Die Differenz schreiben wir Ihnen hiermit gut.</p>"
+    },
+    {
+      "key": "outro",
+      "text": "<p>Den Betrag überweisen wir bis zum 16.10.2026 auf Ihr bei uns hinterlegtes Konto.</p>"
+    }
+  ],
+  "line_items": [
+    {
+      "line_type": "article",
+      "position": "10",
+      "quantity": "120,00",
+      "unit_of_measure": "m²",
+      "product": {
+        "description": "Fassadengerüst Lastklasse 3 – Minderfläche",
+        "details": "Innenhoffassade Bauteil C nach Planänderung nicht eingerüstet, Fläche laut Schlussaufmaß vom 29.09.2026."
+      },
+      "unit_price": "8,90",
+      "net_amount": "1.068,00",
+      "tax_rate": "19"
+    }
+  ],
+  "totals": {
+    "net": "1.068,00",
+    "vat_rates": [
+      {
+        "rate": "19",
+        "amount": "202,92"
+      }
+    ],
+    "grand_total": "1.270,92"
+  },
+  "payment": {
+    "terms": "Erstattung bis 16.10.2026",
+    "method": "Überweisung"
+  }
+}

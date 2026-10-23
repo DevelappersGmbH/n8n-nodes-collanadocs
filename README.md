@@ -82,7 +82,7 @@ Images must be embedded as `data:` URIs; the renderer does not fetch external UR
 
 Validation errors come back verbatim from the service, naming the offending JSON path.
 
-See [examples](examples) for three complete working requests — an offer as PDF, and the matching invoice both as PDF with ZUGFeRD and as XRechnung XML — each with an importable n8n workflow.
+See [examples](examples) for five complete working requests — an offer as PDF, the matching invoice both as PDF with ZUGFeRD and as XRechnung XML, a credit note on that invoice, and an XRechnung to a public-sector buyer with a Leitweg-ID — each with an importable n8n workflow.
 
 ### Required fields for e-invoices
 
